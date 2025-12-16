@@ -62,6 +62,10 @@ android {
 }
 
 dependencies {
+    // --- Project modules ---
+    implementation(project(":core:data"))
+    implementation(project(":core:domain"))
+
     // --- Android Core & Lifecycle ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
