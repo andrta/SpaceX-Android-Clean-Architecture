@@ -3,11 +3,14 @@ plugins {
     // Android Application (for module :app)
     alias(libs.plugins.androidApplication) apply false
 
-    // Android Library (for modules :core e :features)
+    // Android Library
     alias(libs.plugins.androidLibrary) apply false
 
-    // Kotlin Android
+    // Kotlin Android (for Android modules)
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
+
+    // Kotlin Jvm (for Kotlin modules)
+    alias(libs.plugins.jetbrainsKotlinJvm) apply false
 
     // Kotlin Serialization (for parsing JSON REST)
     alias(libs.plugins.jetbrainsKotlinSerialization) apply false
@@ -20,4 +23,5 @@ plugins {
 
     // Apollo GraphQL (needed to generate models from the files .graphql)
     alias(libs.plugins.apollo) apply false
+
 }

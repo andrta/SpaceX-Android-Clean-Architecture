@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Space X Android Clean Architecture"
 include(":app")
+include(":core:domain")
