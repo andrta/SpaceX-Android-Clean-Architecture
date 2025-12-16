@@ -35,14 +35,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlin {
-        compilerOptions {
-            optIn.add("kotlin.RequiresOptIn")
-        }
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     buildFeatures {
@@ -65,6 +63,8 @@ dependencies {
     // --- Project modules ---
     implementation(project(":core:data"))
     implementation(project(":core:domain"))
+    implementation(project(":core:localstorage"))
+    implementation(project(":core:testing"))
 
     // --- Android Core & Lifecycle ---
     implementation(libs.androidx.core.ktx)
