@@ -1,13 +1,26 @@
 query GetPastLaunches {
-  launchesPast(limit: 10) {
-    id
-    mission_name
-    launch_date_utc
-    rocket {
-      rocket_name
+    launchesPast(limit: 20) {
+        id
+        mission_name
+        launch_date_utc
+        launch_success
+        details
+
+        # Nested Object: ROCKET
+        rocket {
+            rocket_name
+            rocket {
+                id
+            }
+        }
+
+        # Nested Object: LINKS
+        links {
+            mission_patch_small
+            video_link
+            article_link
+            wikipedia
+            flickr_images
+        }
     }
-    links {
-      mission_patch_small
-    }
-  }
 }
