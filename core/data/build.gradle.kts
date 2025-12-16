@@ -35,6 +35,9 @@ dependencies {
 
     // --- Coroutines ---
     implementation(libs.kotlinx.coroutines.core)
+
+    // --- Testing ---
+    testImplementation(project(":core:testing"))
 }
 
 apollo {
