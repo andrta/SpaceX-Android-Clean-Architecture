@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Space X Android(Clean Architecture"
+rootProject.name = "Space X Android Clean Architecture"
 include(":app")
