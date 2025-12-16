@@ -12,5 +12,9 @@ kotlin {
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
+    api(libs.junit)
+    api(libs.kotlinx.coroutines.test)
+    api(libs.truth)
+    api(libs.turbine)
+    api(libs.mockk)
 }
