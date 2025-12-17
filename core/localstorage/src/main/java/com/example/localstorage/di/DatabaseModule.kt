@@ -2,7 +2,9 @@ package com.example.localstorage.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.data.datasource.LaunchLocalDataSource
 import com.example.localstorage.dao.LaunchDao
+import com.example.localstorage.datasource.LaunchLocalDataSourceImpl
 import com.example.localstorage.db.MIGRATION_1_2
 import com.example.localstorage.db.SpaceXDatabase
 import dagger.Module
@@ -30,5 +32,10 @@ object DatabaseModule {
     @Provides
     fun provideLaunchDao(database: SpaceXDatabase): LaunchDao {
         return database.launchDao()
+    }
+
+    @Provides
+    fun provideLocalDataSource(dao: LaunchDao): LaunchLocalDataSource {
+        return LaunchLocalDataSourceImpl(dao)
     }
 }
