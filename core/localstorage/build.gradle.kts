@@ -48,4 +48,5 @@ dependencies {
 
     // --- Testing ---
     testImplementation(project(":core:testing"))
+    testImplementation(libs.androidx.room.testing) // Used to test Room migrations
 }
