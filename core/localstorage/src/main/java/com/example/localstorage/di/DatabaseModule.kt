@@ -3,6 +3,7 @@ package com.example.localstorage.di
 import android.content.Context
 import androidx.room.Room
 import com.example.localstorage.dao.LaunchDao
+import com.example.localstorage.db.MIGRATION_1_2
 import com.example.localstorage.db.SpaceXDatabase
 import dagger.Module
 import dagger.Provides
@@ -22,7 +23,7 @@ object DatabaseModule {
             SpaceXDatabase::class.java,
             "spacex_database"
         )
-            .fallbackToDestructiveMigration(true) // Per ora, se cambi versione cancella tutto (in dev va bene)
+            .addMigrations(MIGRATION_1_2)
             .build()
     }
 

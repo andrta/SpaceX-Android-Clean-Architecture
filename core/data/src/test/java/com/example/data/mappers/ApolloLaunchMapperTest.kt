@@ -1,8 +1,7 @@
-
 package com.example.data.mappers
 
 import com.example.data.GetPastLaunchesQuery
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import java.time.ZonedDateTime
 
@@ -34,18 +33,18 @@ class ApolloLaunchMapperTest {
         val result = launch.toDomain()
 
         // THEN
-        Truth.assertThat(result.id).isEqualTo(launch.id)
-        Truth.assertThat(result.missionName).isEqualTo(launch.mission_name)
-        Truth.assertThat(result.launchDate).isEqualTo(ZonedDateTime.parse(inputDateString))
-        Truth.assertThat(result.isSuccess).isEqualTo(launch.launch_success)
-        Truth.assertThat(result.details).isEqualTo(launch.details)
-        Truth.assertThat(result.rocketId).isEqualTo(launch.rocket?.rocket?.id)
-        Truth.assertThat(result.rocketName).isEqualTo(launch.rocket?.rocket_name)
-        Truth.assertThat(result.patchImageUrl).isEqualTo(launch.links?.mission_patch_small)
-        Truth.assertThat(result.flickrImages).isEqualTo(launch.links?.flickr_images)
-        Truth.assertThat(result.webcastUrl).isEqualTo(launch.links?.video_link)
-        Truth.assertThat(result.articleUrl).isEqualTo(launch.links?.article_link)
-        Truth.assertThat(result.wikipediaUrl).isEqualTo(launch.links?.wikipedia)
+        assertThat(result.id).isEqualTo(launch.id)
+        assertThat(result.missionName).isEqualTo(launch.mission_name)
+        assertThat(result.launchDate).isEqualTo(ZonedDateTime.parse(inputDateString))
+        assertThat(result.isSuccess).isEqualTo(launch.launch_success)
+        assertThat(result.details).isEqualTo(launch.details)
+        assertThat(result.rocketId).isEqualTo(launch.rocket?.rocket?.id)
+        assertThat(result.rocketName).isEqualTo(launch.rocket?.rocket_name)
+        assertThat(result.patchImageUrl).isEqualTo(launch.links?.mission_patch_small)
+        assertThat(result.flickrImages).isEqualTo(launch.links?.flickr_images)
+        assertThat(result.webcastUrl).isEqualTo(launch.links?.video_link)
+        assertThat(result.articleUrl).isEqualTo(launch.links?.article_link)
+        assertThat(result.wikipediaUrl).isEqualTo(launch.links?.wikipedia)
     }
 
     @Test
@@ -66,18 +65,18 @@ class ApolloLaunchMapperTest {
         val result = launch.toDomain()
 
         // THEN
-        Truth.assertThat(result.id).isEqualTo(launch.id)
-        Truth.assertThat(result.missionName).isNull()
-        Truth.assertThat(result.launchDate).isEqualTo(ZonedDateTime.parse(inputDateString))
-        Truth.assertThat(result.isSuccess).isFalse()
-        Truth.assertThat(result.details).isNull()
-        Truth.assertThat(result.rocketId).isNull()
-        Truth.assertThat(result.rocketName).isNull()
-        Truth.assertThat(result.patchImageUrl).isNull()
-        Truth.assertThat(result.flickrImages).isEmpty()
-        Truth.assertThat(result.webcastUrl).isNull()
-        Truth.assertThat(result.articleUrl).isNull()
-        Truth.assertThat(result.wikipediaUrl).isNull()
+        assertThat(result.id).isEqualTo(launch.id)
+        assertThat(result.missionName).isNull()
+        assertThat(result.launchDate).isEqualTo(ZonedDateTime.parse(inputDateString))
+        assertThat(result.isSuccess).isFalse()
+        assertThat(result.details).isNull()
+        assertThat(result.rocketId).isNull()
+        assertThat(result.rocketName).isNull()
+        assertThat(result.patchImageUrl).isNull()
+        assertThat(result.flickrImages).isEmpty()
+        assertThat(result.webcastUrl).isNull()
+        assertThat(result.articleUrl).isNull()
+        assertThat(result.wikipediaUrl).isNull()
     }
 
     @Test
@@ -98,8 +97,8 @@ class ApolloLaunchMapperTest {
         val result = launch.toDomain()
 
         // THEN
-        Truth.assertThat(result.launchDate.dayOfMonth).isEqualTo(now.dayOfMonth)
-        Truth.assertThat(result.launchDate.month).isEqualTo(now.month)
-        Truth.assertThat(result.launchDate.year).isEqualTo(now.year)
+        assertThat(result.launchDate.dayOfMonth).isEqualTo(now.dayOfMonth)
+        assertThat(result.launchDate.month).isEqualTo(now.month)
+        assertThat(result.launchDate.year).isEqualTo(now.year)
     }
 }

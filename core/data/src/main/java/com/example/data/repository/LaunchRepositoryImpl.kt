@@ -11,8 +11,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class LaunchRepositoryImpl @Inject constructor(
-    @Named("graphql") private val graphqlSource: LaunchRemoteDataSource,
-    @Named("rest") private val restSource: LaunchRemoteDataSource,
+    @get:Named("graphql") private val graphqlSource: LaunchRemoteDataSource,
+    @get:Named("rest") private val restSource: LaunchRemoteDataSource,
     private val featureFlags: FeatureFlagProvider,
 ) : LaunchRepository {
     override fun getLastLaunches(forceRefresh: Boolean): Flow<DomainResult<List<Launch>>> = flow {

@@ -9,7 +9,7 @@ import com.example.localstorage.entities.LaunchEntity
 
 @Database(
     entities = [LaunchEntity::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(RoomTypeConverters::class)
