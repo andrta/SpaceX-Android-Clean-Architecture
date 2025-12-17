@@ -1,6 +1,7 @@
-package com.example.data
+package com.example.data.datasource
 
 import com.apollographql.apollo3.ApolloClient
+import com.example.data.GetPastLaunchesQuery
 import com.example.data.mappers.toDomain
 import com.example.domain.models.Launch
 import javax.inject.Inject

@@ -1,8 +1,8 @@
 package com.example.data.di
 
-import com.example.data.GraphQlLaunchDataSource
-import com.example.data.LaunchRemoteDataSource
-import com.example.data.RestLaunchDataSource
+import com.example.data.datasource.GraphQlLaunchDataSource
+import com.example.data.datasource.LaunchRemoteDataSource
+import com.example.data.datasource.RestLaunchDataSource
 import com.example.data.repository.LaunchRepositoryImpl
 import com.example.domain.repository.LaunchRepository
 import dagger.Module
