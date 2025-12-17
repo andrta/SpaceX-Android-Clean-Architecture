@@ -12,6 +12,8 @@ android {
     defaultConfig {
         minSdk = 26
         consumerProguardFiles("consumer-rules.pro")
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -21,6 +23,10 @@ android {
 
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
+    sourceSets {
+        getByName("androidTest").assets.srcDirs("$projectDir/schemas") // Instrumental tests JSON files schemas folder
     }
 }
 
@@ -43,10 +49,16 @@ dependencies {
     // --- Serialization ---
     implementation(libs.kotlinx.serialization.json)
 
-    // --- Simple Preferences ---
+    // --- DataStore ---
     implementation(libs.androidx.datastore)
 
-    // --- Testing ---
+    // --- Unit Tests ---
     testImplementation(project(":core:testing"))
-    testImplementation(libs.androidx.room.testing) // Used to test Room migrations
+
+    // --- Instrumented Tests ---
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.truth)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.room.testing)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 }
