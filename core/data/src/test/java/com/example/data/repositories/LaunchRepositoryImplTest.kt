@@ -101,8 +101,8 @@ class LaunchRepositoryImplTest {
         val result = repository.getLastLaunches(false).first()
 
         // THEN
-        assertThat(result).isInstanceOf(DomainResult.Error::class.java)
-        assertThat((result as DomainResult.Error).error).isEqualTo(DataError.Network)
+        assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
+        assertThat((result as DomainResult.Failure).error).isEqualTo(DataError.Network)
     }
 
     @Test

@@ -50,7 +50,5 @@ dependencies {
     implementation(libs.coil.views)
 
     // --- Testing ---
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(project(":core:testing"))
 }

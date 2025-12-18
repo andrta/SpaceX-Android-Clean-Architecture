@@ -58,7 +58,7 @@ class LaunchRepositoryImpl @Inject constructor(
                 if (recentNetworkError != null) {
                     // Cache is empty AND Network failed.
                     // The user has no data to see and the update failed. We must propagate the error.
-                    DomainResult.Error(recentNetworkError)
+                    DomainResult.Failure(recentNetworkError)
                 } else {
                     // Cache is empty AND Network succeeded (or wasn't attempted/didn't fail).
                     // This implies a genuine Empty State (the API returned 0 items).
