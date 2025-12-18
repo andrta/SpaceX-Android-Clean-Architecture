@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.jetbrainsKotlinJvm)
+    alias(libs.plugins.ksp)
 }
 
 java {
@@ -12,5 +13,10 @@ kotlin {
 }
 
 dependencies {
+    // --- Coroutines ---
     implementation(libs.kotlinx.coroutines.core)
+
+    // --- Hilt ---
+    implementation(libs.hilt.core)
+    ksp(libs.hilt.compiler)
 }
