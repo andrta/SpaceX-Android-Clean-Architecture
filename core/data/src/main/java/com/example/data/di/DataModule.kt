@@ -18,8 +18,7 @@ class DataModule {
     @Named("graphql")
     fun provideGraphQlDataSource(
         dataSource: GraphQlLaunchDataSource
-    ): LaunchRemoteDataSource =
-        dataSource
+    ): LaunchRemoteDataSource = dataSource
 
     @Provides
     @Named("rest")

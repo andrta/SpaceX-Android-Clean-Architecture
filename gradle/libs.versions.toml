@@ -49,7 +49,6 @@ androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", ve
 # --- Lifecycle ---
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
-# Importante per Compose: collectAsStateWithLifecycle()
 androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle" }
 
 # --- Compose ---

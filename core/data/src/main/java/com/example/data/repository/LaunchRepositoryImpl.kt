@@ -16,8 +16,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class LaunchRepositoryImpl @Inject constructor(
-    @get:Named("graphql") private val graphqlSource: LaunchRemoteDataSource,
-    @get:Named("rest") private val restSource: LaunchRemoteDataSource,
+    @Named("graphql") private val graphqlSource: LaunchRemoteDataSource,
+    @Named("rest") private val restSource: LaunchRemoteDataSource,
     private val localSource: LaunchLocalDataSource,
     private val featureFlags: FeatureFlagProvider
 ) : LaunchRepository {
