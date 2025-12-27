@@ -11,42 +11,62 @@ import com.example.domain.models.Launch
 import com.example.launches.R
 import com.example.launches.databinding.ItemLaunchBinding
 
-class LaunchesAdapter(private val onLaunchClick: (Launch) -> Unit) :
-    ListAdapter<Launch, LaunchesAdapter.LaunchViewHolder>(LaunchDiffCallback()) {
+class LaunchesAdapter(
+    private val onLaunchClick: (String) -> Unit
+) : ListAdapter<Launch, LaunchesAdapter.LaunchViewHolder>(LaunchDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LaunchViewHolder {
-        val binding = ItemLaunchBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return LaunchViewHolder(binding)
+        val binding = ItemLaunchBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return LaunchViewHolder(binding, onLaunchClick)
     }
 
     override fun onBindViewHolder(holder: LaunchViewHolder, position: Int) {
-        val launch = getItem(position)
-        holder.itemView.setOnClickListener {
-            onLaunchClick(launch)
-        }
-        holder.bind(launch)
+        holder.bind(getItem(position))
     }
 
-    class LaunchViewHolder(private val binding: ItemLaunchBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bind(launch: Launch) {
-            binding.missionName.text = launch.missionName
-            binding.rocketName.text = launch.rocketName
-            binding.launchDate.text = launch.launchDate.toString()
+    class LaunchViewHolder(
+        private val binding: ItemLaunchBinding,
+        onItemClicked: (String) -> Unit
+    ) : RecyclerView.ViewHolder(binding.root) {
+        private var currentLaunchId: String? = null
 
-            binding.mainImage.load(launch.patchImageUrl) {
-                placeholder(R.drawable.placeholder)
-                fallback(R.drawable.placeholder)
-                error(R.drawable.placeholder)
+        init {
+            binding.root.setOnClickListener {
+                currentLaunchId?.let { id -> onItemClicked(id) }
             }
+        }
 
-            val statusIconRes = if (launch.isSuccess) R.drawable.ic_check_circle_24 else R.drawable.ic_warning_24
-            val statusColorRes = if (launch.isSuccess) R.color.success else R.color.error
-            binding.statusIcon.setImageResource(statusIconRes)
-            binding.statusIcon.setColorFilter(
-                ContextCompat.getColor(binding.root.context, statusColorRes),
-                android.graphics.PorterDuff.Mode.SRC_IN
-            )
+        fun bind(launch: Launch) {
+            currentLaunchId = launch.id
+
+            with(binding) {
+                missionName.text = launch.missionName
+                rocketName.text = launch.rocketName
+                launchDate.text = launch.launchDate.toString()
+
+                mainImage.load(launch.patchImageUrl) {
+                    crossfade(true)
+                    placeholder(R.drawable.placeholder)
+                    error(R.drawable.placeholder)
+                }
+
+                val context = root.context
+                val (iconRes, colorRes) = if (launch.isSuccess) {
+                    R.drawable.ic_check_circle_24 to R.color.success
+                } else {
+                    R.drawable.ic_warning_24 to R.color.error
+                }
+
+                statusIcon.setImageResource(iconRes)
+                statusIcon.setColorFilter(
+                    ContextCompat.getColor(context, colorRes),
+                    android.graphics.PorterDuff.Mode.SRC_IN
+                )
+            }
         }
     }
 

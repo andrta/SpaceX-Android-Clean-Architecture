@@ -2,7 +2,7 @@ package com.example.localstorage.mappers
 
 import com.example.domain.models.Launch
 import com.example.localstorage.entities.LaunchEntity
-import com.example.localstorage.exception.DataException
+import com.example.domain.exception.DataException
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import java.time.ZonedDateTime
@@ -62,23 +62,6 @@ class LaunchEntityMapperTest {
         assertThat(entity.id).isEqualTo("123")
         assertThat(entity.missionName).isEqualTo("Mission X")
         assertThat(entity.userNotes).isNull() // Default value check
-    }
-
-    @Test(expected = DataException.NullValueException::class)
-    fun `GIVEN Launch with null ID WHEN toEntity called THEN throws DataException`() {
-        // GIVEN
-        val launch = Launch(
-            id = null, // Invalid
-            missionName = "Mission",
-            launchDate = ZonedDateTime.now(),
-            isSuccess = true,
-            rocketId = "r1",
-            rocketName = "Falcon",
-            details = null, patchImageUrl = null, webcastUrl = null, articleUrl = null, wikipediaUrl = null, flickrImages = emptyList()
-        )
-
-        // WHEN
-        launch.toEntity()
     }
 
     @Test(expected = DataException.NullValueException::class)

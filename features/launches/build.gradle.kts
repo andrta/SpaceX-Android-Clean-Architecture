@@ -63,6 +63,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.views)
 
+    // --- Immutable Collections ---
+    implementation(libs.kotlinx.collections.immutable)
+
     // --- Testing ---
     testImplementation(project(":core:testing"))
 }

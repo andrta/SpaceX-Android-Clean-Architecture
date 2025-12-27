@@ -2,12 +2,13 @@ package com.example.data.mappers
 
 
 import com.example.data.models.dto.LaunchDto
+import com.example.domain.exception.DataException
 import com.example.domain.models.Launch
 import java.time.ZonedDateTime
 
 fun LaunchDto.toDomain(rocketName: String): Launch {
     return Launch(
-        id = this.id,
+        id = this.id ?: throw DataException.NullValueException(),
         missionName = this.name,
 
         launchDate = try {
