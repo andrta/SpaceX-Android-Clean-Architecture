@@ -21,7 +21,7 @@ fun LaunchDto.toDomain(rocketName: String): Launch {
         rocketName = rocketName,
 
         details = this.details,
-        patchImageUrl = this.links?.patch?.small,
+        patchImageUrl = this.links?.flickr?.original?.firstOrNull(),
         webcastUrl = this.links?.webcast,
         articleUrl = this.links?.article,
         wikipediaUrl = this.links?.wikipedia,
