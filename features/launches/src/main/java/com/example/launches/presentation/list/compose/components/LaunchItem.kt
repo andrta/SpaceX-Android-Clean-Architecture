@@ -1,4 +1,4 @@
-package com.example.launches.presentation.compose.components
+package com.example.launches.presentation.list.compose.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
@@ -24,12 +25,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.domain.models.Launch
 import com.example.launches.R
+import com.example.launches.model.LaunchUiModel
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun LaunchItem(launch: Launch, onLaunchClick: () -> Unit) {
+fun LaunchItem(launchUiModel: LaunchUiModel, onLaunchClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -43,7 +44,7 @@ fun LaunchItem(launch: Launch, onLaunchClick: () -> Unit) {
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(launch.patchImageUrl)
+                    .data(launchUiModel.patchImageUrl)
                     .crossfade(true)
                     .build(),
                 placeholder = painterResource(R.drawable.placeholder),
@@ -56,15 +57,16 @@ fun LaunchItem(launch: Launch, onLaunchClick: () -> Unit) {
 
             Column {
                 Text(
-                    text = launch.missionName ?: "Unknown Mission",
+                    text = launchUiModel.missionName,
                     style = MaterialTheme.typography.titleMedium
                 )
                 Text(
-                    text = launch.rocketName ?: "Unknown Rocket",
+                    text = launchUiModel.rocketName,
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-                val dateStr = launch.launchDate.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: "N/A"
+                val dateStr =
+                    launchUiModel.launchDate.format(DateTimeFormatter.ISO_LOCAL_DATE) ?: "N/A"
                 Text(
                     text = dateStr,
                     style = MaterialTheme.typography.labelSmall,
@@ -75,9 +77,9 @@ fun LaunchItem(launch: Launch, onLaunchClick: () -> Unit) {
             Spacer(modifier = Modifier.weight(1f))
 
             val statusColor =
-                if (launch.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                if (launchUiModel.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             Icon(
-                imageVector = if (launch.isSuccess) androidx.compose.material.icons.Icons.Default.CheckCircle else androidx.compose.material.icons.Icons.Default.Warning,
+                imageVector = if (launchUiModel.isSuccess) Icons.Default.CheckCircle else Icons.Default.Warning,
                 contentDescription = "Status",
                 tint = statusColor
             )

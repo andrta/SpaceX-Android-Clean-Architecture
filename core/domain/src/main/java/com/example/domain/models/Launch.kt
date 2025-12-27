@@ -1,9 +1,7 @@
 package com.example.domain.models
 
 import java.time.ZonedDateTime
-import javax.annotation.concurrent.Immutable
 
-@Immutable
 data class Launch(
     val id: String,
     val missionName: String?,

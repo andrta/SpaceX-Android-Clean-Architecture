@@ -2,13 +2,8 @@ package com.example.spacexandroidcleanarchitecture
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.fragment.app.commit
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -16,9 +11,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.domain.featureflags.FeatureFlagProvider
-import com.example.launches.presentation.androidview.LaunchDetailsFragment
-import com.example.launches.presentation.androidview.LaunchesFragment
-import com.example.launches.presentation.compose.LaunchesScreen
+import com.example.launches.presentation.details.androidview.LaunchDetailsFragment
+import com.example.launches.presentation.details.compose.LaunchDetailsScreen
+import com.example.launches.presentation.list.androidview.LaunchesFragment
+import com.example.launches.presentation.list.compose.LaunchesScreen
 import com.example.spacexandroidcleanarchitecture.ui.theme.SpaceXAndroidCleanArchitectureTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -30,6 +26,8 @@ class MainActivity : AppCompatActivity(), LaunchesFragment.NavigationListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        enableEdgeToEdge()
 
         if (featureFlags.isComposeEnabled) {
             setupComposeUi()
@@ -55,9 +53,12 @@ class MainActivity : AppCompatActivity(), LaunchesFragment.NavigationListener {
                     composable(
                         route = "launch_details/{launchId}",
                         arguments = listOf(navArgument("launchId") { type = NavType.StringType })
-                    ) { backStackEntry ->
-                        val launchId = backStackEntry.arguments?.getString("launchId") ?: ""
-                        LaunchDetailsScreen(launchId = launchId)
+                    ) {
+                        LaunchDetailsScreen(
+                            onNavigateBack = {
+                                navController.popBackStack()
+                            }
+                        )
                     }
                 }
             }
@@ -77,7 +78,7 @@ class MainActivity : AppCompatActivity(), LaunchesFragment.NavigationListener {
     override fun onNavigateToDetail(id: String) {
         val detailFragment = LaunchDetailsFragment().apply {
             arguments = Bundle().apply {
-                putString("LAUNCH_ID", id)
+                putString("launchId", id)
             }
         }
 
@@ -85,12 +86,5 @@ class MainActivity : AppCompatActivity(), LaunchesFragment.NavigationListener {
             replace(R.id.fragment_container, detailFragment)
             addToBackStack(null)
         }
-    }
-}
-
-@Composable
-fun LaunchDetailsScreen(launchId: String) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("Details for Launch ID: $launchId")
     }
 }
