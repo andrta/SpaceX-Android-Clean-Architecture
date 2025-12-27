@@ -19,18 +19,17 @@ fun GetPastLaunchesQuery.LaunchesPast.toDomain(): Launch {
             ZonedDateTime.now()
         },
 
-        isSuccess = this.launch_success == true, // Gestione del null
+        isSuccess = this.launch_success == true,
         details = this.details,
 
         rocketName = this.rocket?.rocket_name,
         rocketId = this.rocket?.rocket?.id,
 
-        patchImageUrl = this.links?.mission_patch_small,
+        patchImageUrl = this.links?.flickr_images?.firstOrNull(),
         webcastUrl = this.links?.video_link,
         articleUrl = this.links?.article_link,
-        wikipediaUrl = this.links?.wikipedia, // Se lo hai aggiunto al Domain Model
+        wikipediaUrl = this.links?.wikipedia,
 
-        // Filtriamo eventuali null nella lista di immagini
         flickrImages = this.links?.flickr_images?.filterNotNull() ?: emptyList()
     )
 }
