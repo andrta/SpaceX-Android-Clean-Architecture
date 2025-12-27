@@ -6,9 +6,9 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface SpaceXApiService {
-    @GET("v5/launches")
+    @GET("launches")
     suspend fun getLaunches(): List<LaunchDto>
 
-    @GET("v4/rockets/{id}")
+    @GET("rockets/{id}")
     suspend fun getRocket(@Path("id") id: String): RocketDto
 }

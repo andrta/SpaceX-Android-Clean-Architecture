@@ -28,7 +28,7 @@ annotation class GraphQlBaseUrl
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val REST_BASE_URL = "https://api.spacexdata.com/v3/"
+    private const val REST_BASE_URL = "https://api.spacexdata.com/v5/"
     private const val GRAPHQL_BASE_URL = "https://spacex-production.up.railway.app/"
 
     @Provides
