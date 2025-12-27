@@ -2,7 +2,7 @@ package com.example.localstorage.mappers
 
 import com.example.domain.models.Launch
 import com.example.localstorage.entities.LaunchEntity
-import com.example.localstorage.exception.DataException
+import com.example.domain.exception.DataException
 
 fun LaunchEntity.toDomain(): Launch {
     return Launch(
@@ -23,7 +23,7 @@ fun LaunchEntity.toDomain(): Launch {
 
 fun Launch.toEntity(): LaunchEntity {
     return LaunchEntity(
-        id = this.id ?: throw DataException.NullValueException(),
+        id = this.id,
         missionName = this.missionName ?: throw DataException.NullValueException(),
         launchDate = this.launchDate,
         isSuccess = this.isSuccess,
