@@ -23,13 +23,9 @@ class LaunchRepositoryImpl @Inject constructor(
 ) : LaunchRepository {
 
     override fun getLastLaunches(forceRefresh: Boolean): Flow<DomainResult<List<Launch>>> = flow {
-
-        // Variable to capture any network failure occurring during the update process.
-        // We capture it here to decide later whether to expose it to the UI.
         var recentNetworkError: DataError? = null
 
-        // 1. NETWORK UPDATE ATTEMPT (Network -> DB)
-        // We try to fetch fresh data and save it to the local database.
+        // 1. NETWORK UPDATE (Se richiesto)
         try {
             val remoteLaunches = if (featureFlags.isGraphQlEnabled) {
                 graphqlSource.getLastLaunches()
@@ -37,37 +33,32 @@ class LaunchRepositoryImpl @Inject constructor(
                 restSource.getLastLaunches()
             }
             localSource.saveLaunches(remoteLaunches)
-
         } catch (e: Exception) {
-            // Map the technical exception to a Domain Error.
-            // WE DO NOT EMIT IT YET. We store it to check against the cache state later.
             recentNetworkError = e.toDataError()
-            e.printStackTrace() // Log for debugging (or send to Crashlytics)
+            e.printStackTrace()
         }
 
-        // 2. SINGLE SOURCE OF TRUTH (DB -> UI)
-        // We subscribe to the local database flow.
+        // 2. EMIT FROM DB
         val localFlow = localSource.getLaunches().map { list ->
             if (list.isNotEmpty()) {
-                // CASE A: We have cached data.
-                // We always show the cache, even if the network update failed (Offline-first approach).
-                // The user sees the last known good data.
                 DomainResult.Success(list)
             } else {
-                // CASE B: The cache is empty.
                 if (recentNetworkError != null) {
-                    // Cache is empty AND Network failed.
-                    // The user has no data to see and the update failed. We must propagate the error.
                     DomainResult.Failure(recentNetworkError)
                 } else {
-                    // Cache is empty AND Network succeeded (or wasn't attempted/didn't fail).
-                    // This implies a genuine Empty State (the API returned 0 items).
                     DomainResult.Success(emptyList())
                 }
             }
         }
-
-        // Bridge the local flow to the repository output
         emitAll(localFlow)
+    }
+
+    override fun getLaunchDetails(launchId: String): Flow<DomainResult<Launch>> = flow {
+        val launch = localSource.getLaunchById(launchId)
+        if (launch != null) {
+            emit(DomainResult.Success(launch))
+        } else {
+            emit(DomainResult.Failure(DataError.Local.DiskRead))
+        }
     }
 }

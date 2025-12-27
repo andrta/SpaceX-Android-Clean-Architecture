@@ -1,8 +1,17 @@
 package com.example.domain.result
 
 sealed interface DataError {
-    data object Network : DataError         // No connection or Timeout
-    data object Server : DataError          // 500, 404, etc.
-    data object Serialization : DataError   // JSON malformed
-    data class Unknown(val message: String) : DataError // Unknown error
+    sealed interface Network : DataError {
+        data object RequestTimeout : Network
+        data object NoInternet : Network
+        data object TooManyRequests : Network
+        data object Server : Network
+        data object Serialization : Network
+        data class PayloadTooLarge(val limit: Long) : Network
+        data class Unknown(val message: String) : Network
+    }
+
+    sealed interface Local : DataError {
+        data object DiskRead : Local
+    }
 }

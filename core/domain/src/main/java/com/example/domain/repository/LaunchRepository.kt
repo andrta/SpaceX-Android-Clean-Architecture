@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface LaunchRepository {
     fun getLastLaunches(forceRefresh: Boolean = false): Flow<DomainResult<List<Launch>>>
+    fun getLaunchDetails(launchId: String): Flow<DomainResult<Launch>>
 }

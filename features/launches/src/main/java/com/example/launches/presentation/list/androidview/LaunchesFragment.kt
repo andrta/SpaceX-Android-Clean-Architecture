@@ -1,4 +1,4 @@
-package com.example.launches.presentation.androidview
+package com.example.launches.presentation.list.androidview
 
 import android.content.Context
 import android.os.Bundle
@@ -15,7 +15,7 @@ import com.example.launches.databinding.FragmentLaunchesBinding
 import com.example.launches.model.LaunchesIntent
 import com.example.launches.model.LaunchesUiEffect
 import com.example.launches.model.LaunchesUiState
-import com.example.launches.viewmodel.LaunchesViewModel
+import com.example.launches.viewmodel.list.LaunchesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

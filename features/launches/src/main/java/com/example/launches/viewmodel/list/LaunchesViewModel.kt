@@ -1,9 +1,10 @@
-package com.example.launches.viewmodel
+package com.example.launches.viewmodel.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.domain.models.Launch
 import com.example.domain.result.DomainResult
+import com.example.launches.mappers.toUiModel
 import com.example.launches.model.LaunchesIntent
 import com.example.launches.model.LaunchesUiEffect
 import com.example.launches.model.LaunchesUiState
@@ -12,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +29,7 @@ class LaunchesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<LaunchesUiState>(LaunchesUiState.Loading)
     val uiState: StateFlow<LaunchesUiState> = _uiState.asStateFlow()
 
-    private val _uiEffect = Channel<LaunchesUiEffect>(Channel.BUFFERED)
+    private val _uiEffect = Channel<LaunchesUiEffect>(BUFFERED)
     val uiEffect = _uiEffect.receiveAsFlow()
 
     init {
@@ -39,6 +41,7 @@ class LaunchesViewModel @Inject constructor(
             is LaunchesIntent.Refresh -> {
                 loadLaunches(forceRefresh = true)
             }
+
             is LaunchesIntent.LaunchClicked -> {
                 sendEffect(LaunchesUiEffect.NavigateToDetail(intent.id))
             }
@@ -64,7 +67,9 @@ class LaunchesViewModel @Inject constructor(
             when (result) {
                 is DomainResult.Success -> {
                     LaunchesUiState.Success(
-                        launches = result.data.toImmutableList(),
+                        launches = result.data
+                            .map { it.toUiModel() }
+                            .toImmutableList(),
                     )
                 }
 

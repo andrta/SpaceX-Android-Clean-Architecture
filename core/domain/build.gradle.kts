@@ -19,7 +19,4 @@ dependencies {
     // --- Hilt ---
     implementation(libs.hilt.core)
     ksp(libs.hilt.compiler)
-
-    // --- Immutable Collections ---
-    implementation(libs.kotlinx.collections.immutable)
 }

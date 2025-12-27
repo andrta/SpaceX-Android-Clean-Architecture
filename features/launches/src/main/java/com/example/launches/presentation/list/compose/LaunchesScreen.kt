@@ -1,4 +1,4 @@
-package com.example.launches.presentation.compose
+package com.example.launches.presentation.list.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -6,29 +6,38 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import com.example.domain.models.Launch
+import com.example.launches.model.LaunchUiModel
 import com.example.launches.model.LaunchesIntent
 import com.example.launches.model.LaunchesUiEffect
 import com.example.launches.model.LaunchesUiState
-import com.example.launches.presentation.compose.components.LaunchItem
-import com.example.launches.viewmodel.LaunchesViewModel
+import com.example.launches.presentation.list.compose.components.LaunchItem
+import com.example.launches.viewmodel.list.LaunchesViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LaunchesScreen(
     viewModel: LaunchesViewModel = hiltViewModel(),
@@ -49,10 +58,38 @@ fun LaunchesScreen(
             }
         }
     }
-    LaunchesContent(
-        uiState = uiState,
-        onIntent = viewModel::process
-    )
+
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+
+    Scaffold(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        "SpaceX Launches",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background, // Sfondo pulito
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp) // Leggero colore allo scroll
+                )
+            )
+        }
+    ) { paddingValues ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            LaunchesContent(
+                uiState = uiState,
+                onIntent = viewModel::process
+            )
+        }
+    }
 }
 
 @Composable
@@ -101,17 +138,17 @@ fun LaunchesContent(
 
 @Composable
 fun LaunchesList(
-    launches: List<Launch>,
+    launches: List<LaunchUiModel>,
     onIntent: (LaunchesIntent) -> Unit
 ) {
     LazyColumn {
         items(
             items = launches,
             key = { it.id }
-        ) { launch ->
+        ) { launchUiModel ->
             LaunchItem(
-                launch = launch,
-                onLaunchClick = { onIntent(LaunchesIntent.LaunchClicked(launch.id)) }
+                launchUiModel = launchUiModel,
+                onLaunchClick = { onIntent(LaunchesIntent.LaunchClicked(launchUiModel.id)) }
             )
         }
     }

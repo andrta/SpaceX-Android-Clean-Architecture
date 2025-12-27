@@ -6,3 +6,8 @@ sealed interface DataException {
         override val message: String = "Expected a not null value",
     ) : DataException, Throwable()
 }
+
+class StorageException(
+    override val message: String? = null,
+    override val cause: Throwable? = null
+) : Exception()

@@ -1,7 +1,8 @@
 package com.example.localstorage.datasource
 
-
+import android.database.sqlite.SQLiteException
 import com.example.data.datasource.LaunchLocalDataSource
+import com.example.domain.exception.StorageException
 import com.example.domain.models.Launch
 import com.example.localstorage.dao.LaunchDao
 import com.example.localstorage.mappers.toDomain
@@ -25,7 +26,14 @@ class LaunchLocalDataSourceImpl @Inject constructor(
     }
 
     override suspend fun saveLaunches(launches: List<Launch>) {
-        dao.insertAll(launches.map { it.toEntity() })
+        try {
+            val entities = launches.map { it.toEntity() }
+            dao.insertAll(entities)
+        } catch (e: SQLiteException) {
+            throw StorageException("Database write error", e)
+        } catch (e: Exception) {
+            throw StorageException("Generic storage error", e)
+        }
     }
 
     override suspend fun clearAll() {

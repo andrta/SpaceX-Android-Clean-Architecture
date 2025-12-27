@@ -1,38 +1,46 @@
 package com.example.data.mappers
 
-import com.apollographql.apollo3.exception.ApolloException
+import com.example.domain.exception.StorageException
 import com.example.domain.result.DataError
 import kotlinx.serialization.SerializationException
-import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+import retrofit2.HttpException
 
-/**
- * Extension function to map technical exceptions into Domain-specific errors.
- */
 fun Throwable.toDataError(): DataError {
     return when (this) {
-        // 1. Connectivity Errors
-        is SocketTimeoutException -> DataError.Network // Specific timeout
-        is IOException -> DataError.Network // No connection / DNS error / Unknown host
-
-        // 2. HTTP Errors (Retrofit)
-        is HttpException -> {
-            when (this.code()) {
-                in 400..499 -> DataError.Unknown("Client Error: ${this.code()}") // e.g., 404 Not Found, 403 Forbidden
-                in 500..599 -> DataError.Server // Server side errors
-                else -> DataError.Unknown("Http Error: ${this.code()}")
+        // --- Gestione RETROFIT / Network ---
+        is IOException -> {
+            when (this) {
+                is SocketTimeoutException -> DataError.Network.RequestTimeout
+                is UnknownHostException -> DataError.Network.NoInternet
+                else -> DataError.Network.Unknown(this.localizedMessage ?: "Unknown IO Error")
             }
         }
 
-        // 3. Serialization Errors (Malformed JSON or DataType mismatch)
-        is SerializationException -> DataError.Serialization
+        is HttpException -> {
+            when (this.code()) {
+                408 -> DataError.Network.RequestTimeout
+                429 -> DataError.Network.TooManyRequests
+                413 -> DataError.Network.PayloadTooLarge(0) // Valore dummy o estratto header
+                in 500..599 -> DataError.Network.Server
+                else -> DataError.Network.Unknown("HTTP Error ${this.code()}")
+            }
+        }
 
-        // 4. Apollo (GraphQL) Errors
-        // Apollo throws ApolloException for network or parsing issues
-        is ApolloException -> DataError.Network
+        // --- Gestione SERIALIZZAZIONE (Kotlinx Serialization / GSON) ---
+        is SerializationException, is IllegalArgumentException -> {
+            // Spesso IllegalArgumentException capita nel parsing JSON
+            DataError.Network.Serialization
+        }
 
-        // 5. Fallback for any other exception
-        else -> DataError.Unknown(this.message ?: "Unknown error")
+        // --- Gestione DATABASE (Room / SQLite) ---
+        is StorageException -> {
+            DataError.Local.DiskRead // O DiskWrite in base al contesto, semplifichiamo
+        }
+
+        // --- Default ---
+        else -> DataError.Network.Unknown(this.localizedMessage ?: "Unknown Error")
     }
 }
