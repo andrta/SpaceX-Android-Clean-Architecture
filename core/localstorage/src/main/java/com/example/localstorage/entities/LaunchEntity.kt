@@ -9,8 +9,8 @@ data class LaunchEntity(
     @PrimaryKey
     val id: String,
     val missionName: String,
-    val launchDate: ZonedDateTime, // It will use the TypeConverter
-    val isSuccess: Boolean,
+    val launchDate: ZonedDateTime,
+    val isSuccess: Boolean?,
 
     val rocketId: String,
     val rocketName: String,
@@ -21,7 +21,8 @@ data class LaunchEntity(
     val wikipediaUrl: String?,
 
     val details: String?,
-    val flickrImages: List<String>, // It will use the TypeConverter
+    val flickrImages: List<String>,
 
-    val userNotes: String? = null, // New variable to test migration to Schema v2. Must be nullable or have a default value to facilitate migration.
+    val userNotes: String? = null,
+    val isFavorite: Boolean = false, // New field for version 3
 )

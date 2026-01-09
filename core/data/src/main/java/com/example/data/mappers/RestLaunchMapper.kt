@@ -16,7 +16,7 @@ fun LaunchDto.toDomain(rocketName: String): Launch {
         } catch (e: Exception) {
             ZonedDateTime.now()
         },
-        isSuccess = this.success ?: false,
+        isSuccess = this.success,
 
         rocketId = this.rocketId,
         rocketName = rocketName,

@@ -29,16 +29,10 @@ class SchemaTest {
 
     @Test
     fun testMigration1To2() {
-        val dbName = "migration-test"
+        val dbName = "migration-test-1-2"
 
         // 1. CREATE DATABASE VERSION 1
-        // Room uses the 'schemas/1.json' file to recreate the old database structure.
         val dbV1 = helper.createDatabase(dbName, 1).apply {
-
-            // 2. INSERT OLD DATA (Simulate a user with the old app version)
-            // We must use raw SQL because the Kotlin 'LaunchEntity' class is already updated to v2.
-            // Note: Ensure column names and order match the v1 schema exactly!
-            // Be careful with TypeConverters (dates and lists must be inserted as Strings).
             execSQL(
                 """
                 INSERT INTO launches (id, missionName, launchDate, isSuccess, rocketId, rocketName, details, patchImageUrl, webcastUrl, articleUrl, flickrImages) 
@@ -48,27 +42,53 @@ class SchemaTest {
             close()
         }
 
-        // 3. RUN MIGRATION TO VERSION 2 AND VALIDATE
-        // Room opens the v1 DB, applies the manual 'MIGRATION_1_2' strategy,
-        // and verifies if the final result matches 'schemas/2.json'.
+        // 2. RUN MIGRATION TO VERSION 2 AND VALIDATE
         val dbV2 = helper.runMigrationsAndValidate(dbName, 2, true, MIGRATION_1_2)
 
-        // 4. VERIFY DATA INTEGRITY
-        // We can now query the v2 database.
+        // 3. VERIFY DATA INTEGRITY
         val cursor = dbV2.query("SELECT * FROM launches WHERE id = ?", arrayOf("id-123"))
         assertThat(cursor.moveToFirst()).isTrue()
 
-        // Verify old data is preserved correctly
         val nameIndex = cursor.getColumnIndex("missionName")
-        val name = cursor.getString(nameIndex)
-        assertThat(name).isEqualTo("Mission V1")
+        assertThat(cursor.getString(nameIndex)).isEqualTo("Mission V1")
 
-        // Verify the new column was added (userNotes)
         val notesIndex = cursor.getColumnIndex("userNotes")
-
-        // It must exist (index != -1) and must be null (default value for existing rows)
         assertThat(notesIndex != -1).isTrue()
         assertThat(cursor.isNull(notesIndex)).isTrue()
+
+        cursor.close()
+    }
+
+    @Test
+    fun testMigration2To3() {
+        val dbName = "migration-test-2-3"
+
+        // 1. CREATE DATABASE VERSION 2
+        val dbV2 = helper.createDatabase(dbName, 2).apply {
+            execSQL(
+                """
+                INSERT INTO launches (id, missionName, launchDate, isSuccess, rocketId, rocketName, details, patchImageUrl, webcastUrl, articleUrl, flickrImages, userNotes) 
+                VALUES ('id-456', 'Mission V2', '2023-01-01T10:00:00Z', 1, 'r-2', 'Falcon Heavy', 'Details V2', NULL, NULL, NULL, '[]', 'Some notes')
+                """.trimIndent()
+            )
+            close()
+        }
+
+        // 2. RUN MIGRATION TO VERSION 3 AND VALIDATE
+        val dbV3 = helper.runMigrationsAndValidate(dbName, 3, true, MIGRATION_2_3)
+
+        // 3. VERIFY DATA INTEGRITY
+        val cursor = dbV3.query("SELECT * FROM launches WHERE id = ?", arrayOf("id-456"))
+        assertThat(cursor.moveToFirst()).isTrue()
+
+        // Verify old data is preserved
+        val notesIndex = cursor.getColumnIndex("userNotes")
+        assertThat(cursor.getString(notesIndex)).isEqualTo("Some notes")
+
+        // Verify the new column 'isFavorite' was added with default value 0 (false)
+        val favoriteIndex = cursor.getColumnIndex("isFavorite")
+        assertThat(favoriteIndex != -1).isTrue()
+        assertThat(cursor.getInt(favoriteIndex)).isEqualTo(0)
 
         cursor.close()
     }

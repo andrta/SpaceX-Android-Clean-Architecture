@@ -2,6 +2,7 @@ package com.example.launches.presentation.list.androidview
 
 import android.graphics.PorterDuff
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
@@ -55,18 +56,23 @@ class LaunchesAdapter(
                     error(R.drawable.placeholder)
                 }
 
-                val context = root.context
-                val (iconRes, colorRes) = if (launchUiModel.isSuccess) {
-                    R.drawable.ic_check_circle_24 to R.color.success
-                } else {
-                    R.drawable.ic_warning_24 to R.color.error
-                }
+                launchUiModel.isSuccess?.let { isSuccess ->
+                    val context = root.context
+                    val (iconRes, colorRes) = if (isSuccess) {
+                        R.drawable.ic_check_circle_24 to R.color.success
+                    } else {
+                        R.drawable.ic_warning_24 to R.color.error
+                    }
 
-                statusIcon.setImageResource(iconRes)
-                statusIcon.setColorFilter(
-                    ContextCompat.getColor(context, colorRes),
-                    PorterDuff.Mode.SRC_IN
-                )
+                    statusIcon.setImageResource(iconRes)
+                    statusIcon.setColorFilter(
+                        ContextCompat.getColor(context, colorRes),
+                        PorterDuff.Mode.SRC_IN
+                    )
+                    statusIcon.visibility = View.VISIBLE
+                } ?: {
+                    statusIcon.visibility = View.GONE
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.launches.presentation.list.compose
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -44,6 +46,7 @@ fun LaunchesScreen(
     onNavigateToDetail: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner.lifecycle) {
@@ -52,7 +55,7 @@ fun LaunchesScreen(
                 when (effect) {
                     is LaunchesUiEffect.NavigateToDetail -> onNavigateToDetail(effect.launchId)
                     is LaunchesUiEffect.ShowToast -> {
-                        TODO()
+                        Toast.makeText(context, effect.message, Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -73,8 +76,8 @@ fun LaunchesScreen(
                 },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background, // Sfondo pulito
-                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp) // Leggero colore allo scroll
+                    containerColor = MaterialTheme.colorScheme.background,
+                    scrolledContainerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp)
                 )
             )
         }

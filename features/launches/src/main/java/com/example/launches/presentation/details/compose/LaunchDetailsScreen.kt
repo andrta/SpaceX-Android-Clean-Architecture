@@ -153,7 +153,7 @@ private fun SuccessContent(launchUiModel: LaunchUiModel) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            LaunchStatus(isSuccess = launchUiModel.isSuccess)
+            launchUiModel.isSuccess?.let { LaunchStatus(isSuccess = it) }
         }
     }
 }

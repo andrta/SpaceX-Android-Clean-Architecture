@@ -9,7 +9,7 @@ data class LaunchUiModel(
     val id: String,
     val missionName: String,
     val launchDate: ZonedDateTime,
-    val isSuccess: Boolean,
+    val isSuccess: Boolean?,
     val rocketName: String,
     val patchImageUrl: String?,
     val details: String?,

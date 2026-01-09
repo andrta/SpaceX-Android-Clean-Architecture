@@ -6,6 +6,7 @@ import com.example.data.datasource.LaunchLocalDataSource
 import com.example.localstorage.dao.LaunchDao
 import com.example.localstorage.datasource.LaunchLocalDataSourceImpl
 import com.example.localstorage.db.MIGRATION_1_2
+import com.example.localstorage.db.MIGRATION_2_3
 import com.example.localstorage.db.SpaceXDatabase
 import dagger.Module
 import dagger.Provides
@@ -25,7 +26,7 @@ object DatabaseModule {
             SpaceXDatabase::class.java,
             "spacex_database"
         )
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_2_3)
             .build()
     }
 
