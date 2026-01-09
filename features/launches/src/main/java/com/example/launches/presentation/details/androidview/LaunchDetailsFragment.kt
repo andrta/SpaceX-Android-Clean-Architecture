@@ -60,12 +60,17 @@ class LaunchDetailsFragment : Fragment(R.layout.fragment_launch_details) {
                         error(R.drawable.placeholder)
                     }
 
-                    if (state.launch.isSuccess) {
-                        statusText.text = "Success"
-                        statusIcon.setImageResource(R.drawable.ic_check_circle_24)
-                    } else {
-                        statusText.text = "Failure"
-                        statusIcon.setImageResource(R.drawable.ic_warning_24)
+                    state.launch.isSuccess?.let { isSuccess ->
+                        if (isSuccess) {
+                            statusText.text = "Success"
+                            statusIcon.setImageResource(R.drawable.ic_check_circle_24)
+                        } else {
+                            statusText.text = "Failure"
+                            statusIcon.setImageResource(R.drawable.ic_warning_24)
+                        }
+                        statusIcon.visibility = View.VISIBLE
+                    } ?: {
+                        statusIcon.visibility = View.GONE
                     }
                 }
             }

@@ -6,7 +6,7 @@ data class Launch(
     val id: String,
     val missionName: String?,
     val launchDate: ZonedDateTime,
-    val isSuccess: Boolean,
+    val isSuccess: Boolean?,
 
     val rocketId: String?,
     val rocketName: String?,

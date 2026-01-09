@@ -76,13 +76,15 @@ fun LaunchItem(launchUiModel: LaunchUiModel, onLaunchClick: () -> Unit) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            val statusColor =
-                if (launchUiModel.isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-            Icon(
-                imageVector = if (launchUiModel.isSuccess) Icons.Default.CheckCircle else Icons.Default.Warning,
-                contentDescription = "Status",
-                tint = statusColor
-            )
+            launchUiModel.isSuccess?.let { isSuccess ->
+                val statusColor =
+                    if (isSuccess) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                Icon(
+                    imageVector = if (isSuccess) Icons.Default.CheckCircle else Icons.Default.Warning,
+                    contentDescription = "Status",
+                    tint = statusColor
+                )
+            }
         }
     }
 }

@@ -20,7 +20,7 @@ fun GetPastLaunchesQuery.LaunchesPast.toDomain(): Launch {
             ZonedDateTime.now()
         },
 
-        isSuccess = this.launch_success == true,
+        isSuccess = this.launch_success,
         details = this.details,
 
         rocketName = this.rocket?.rocket_name,
