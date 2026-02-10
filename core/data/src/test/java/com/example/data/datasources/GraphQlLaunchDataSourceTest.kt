@@ -42,6 +42,7 @@ class GraphQlLaunchDataSourceTest {
                             rocket = GetPastLaunchesQuery.Rocket1("r1")
                         ),
                         links = GetPastLaunchesQuery.Links(
+                            mission_patch = null,
                             mission_patch_small = null,
                             flickr_images = emptyList(),
                             video_link = null,

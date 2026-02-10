@@ -16,6 +16,7 @@ query GetPastLaunches {
 
         # Nested Object: LINKS
         links {
+            mission_patch
             mission_patch_small
             video_link
             article_link
