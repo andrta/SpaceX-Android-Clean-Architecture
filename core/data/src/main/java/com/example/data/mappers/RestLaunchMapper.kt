@@ -16,13 +16,11 @@ fun LaunchDto.toDomain(rocketName: String): Launch {
         } catch (e: Exception) {
             ZonedDateTime.now()
         },
-        isSuccess = this.success,
-
+        isSuccess = this.success ?: false,
         rocketId = this.rocketId,
         rocketName = rocketName,
-
         details = this.details,
-        patchImageUrl = this.links?.flickr?.original?.firstOrNull(),
+        patchImageUrl = this.links?.patch?.small ?: this.links?.patch?.large,
         webcastUrl = this.links?.webcast,
         articleUrl = this.links?.article,
         wikipediaUrl = this.links?.wikipedia,
