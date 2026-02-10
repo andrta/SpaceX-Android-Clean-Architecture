@@ -24,7 +24,7 @@ class LaunchRepositoryImplTest {
     private lateinit var repository: LaunchRepositoryImpl
     private val graphqlSource: LaunchRemoteDataSource = mockk()
     private val restSource: LaunchRemoteDataSource = mockk()
-    private val localSource: LaunchLocalDataSource = mockk(relaxed = true) // Relaxed for save operations
+    private val localSource: LaunchLocalDataSource = mockk(relaxed = true)
     private val featureFlags: FeatureFlagProvider = mockk()
 
     @Before
@@ -45,7 +45,7 @@ class LaunchRepositoryImplTest {
         coEvery { localSource.getLaunches() } returns flowOf(emptyList())
 
         // WHEN
-        repository.getLastLaunches(false).first()
+        repository.getLastLaunches(true).first()
 
         // THEN
         coVerify { graphqlSource.getLastLaunches() }
@@ -60,7 +60,7 @@ class LaunchRepositoryImplTest {
         coEvery { localSource.getLaunches() } returns flowOf(emptyList())
 
         // WHEN
-        repository.getLastLaunches(false).first()
+        repository.getLastLaunches(true).first()
 
         // THEN
         coVerify { restSource.getLastLaunches() }
@@ -98,11 +98,11 @@ class LaunchRepositoryImplTest {
         coEvery { localSource.getLaunches() } returns flowOf(emptyList())
 
         // WHEN
-        val result = repository.getLastLaunches(false).first()
+        val result = repository.getLastLaunches(true).first()
 
         // THEN
         assertThat(result).isInstanceOf(DomainResult.Failure::class.java)
-        assertThat((result as DomainResult.Failure).error).isEqualTo(DataError.Network)
+        assertThat((result as DomainResult.Failure).error).isEqualTo(DataError.Network.NoInternet)
     }
 
     @Test

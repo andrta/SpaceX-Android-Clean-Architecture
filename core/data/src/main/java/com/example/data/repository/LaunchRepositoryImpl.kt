@@ -16,31 +16,30 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class LaunchRepositoryImpl @Inject constructor(
-    @Named("graphql") private val graphqlSource: LaunchRemoteDataSource,
-    @Named("rest") private val restSource: LaunchRemoteDataSource,
+    @param:Named("graphql") private val graphqlSource: LaunchRemoteDataSource,
+    @param:Named("rest") private val restSource: LaunchRemoteDataSource,
     private val localSource: LaunchLocalDataSource,
     private val featureFlags: FeatureFlagProvider
 ) : LaunchRepository {
 
     override fun getLastLaunches(forceRefresh: Boolean): Flow<DomainResult<List<Launch>>> = flow {
         var recentNetworkError: DataError? = null
-
-        // 1. NETWORK UPDATE (Se richiesto)
-        try {
-            val remoteLaunches = if (featureFlags.isGraphQlEnabled) {
-                graphqlSource.getLastLaunches()
-            } else {
-                restSource.getLastLaunches()
+        if (forceRefresh) {
+            try {
+                val remoteLaunches = if (featureFlags.isGraphQlEnabled()) {
+                    graphqlSource.getLastLaunches()
+                } else {
+                    restSource.getLastLaunches()
+                }
+                localSource.saveLaunches(remoteLaunches)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                recentNetworkError = e.toDataError()
             }
-            localSource.saveLaunches(remoteLaunches)
-        } catch (e: Exception) {
-            recentNetworkError = e.toDataError()
-            e.printStackTrace()
         }
 
-        // 2. EMIT FROM DB
         val localFlow = localSource.getLaunches().map { list ->
-            if (list.isNotEmpty()) {
+            val result: DomainResult<List<Launch>> = if (list.isNotEmpty()) {
                 DomainResult.Success(list)
             } else {
                 if (recentNetworkError != null) {
@@ -49,7 +48,9 @@ class LaunchRepositoryImpl @Inject constructor(
                     DomainResult.Success(emptyList())
                 }
             }
+            result
         }
+
         emitAll(localFlow)
     }
 
@@ -61,4 +62,5 @@ class LaunchRepositoryImpl @Inject constructor(
             emit(DomainResult.Failure(DataError.Local.DiskRead))
         }
     }
+    private fun FeatureFlagProvider.isGraphQlEnabled(): Boolean = isGraphQlEnabled
 }
