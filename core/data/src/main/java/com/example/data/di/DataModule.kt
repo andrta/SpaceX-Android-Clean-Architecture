@@ -5,29 +5,29 @@ import com.example.data.datasource.LaunchRemoteDataSource
 import com.example.data.datasource.RestLaunchDataSource
 import com.example.data.repository.LaunchRepositoryImpl
 import com.example.domain.repository.LaunchRepository
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 
 @Module
 @InstallIn(SingletonComponent::class)
-class DataModule {
-    @Provides
+interface DataModule {
+    @Binds
     @Named("graphql")
-    fun provideGraphQlDataSource(
-        dataSource: GraphQlLaunchDataSource
-    ): LaunchRemoteDataSource = dataSource
+    fun bindGraphQlDataSource(
+        impl: GraphQlLaunchDataSource
+    ): LaunchRemoteDataSource
 
-    @Provides
+    @Binds
     @Named("rest")
-    fun provideRestDataSource(
-        dataSource: RestLaunchDataSource
-    ): LaunchRemoteDataSource = dataSource
+    fun bindRestDataSource(
+        impl: RestLaunchDataSource
+    ): LaunchRemoteDataSource
 
-    @Provides
-    fun provideLaunchRepository(
-        repository: LaunchRepositoryImpl
-    ): LaunchRepository = repository
+    @Binds
+    fun bindLaunchRepository(
+        impl: LaunchRepositoryImpl
+    ): LaunchRepository
 }

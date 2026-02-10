@@ -5,9 +5,9 @@ import androidx.room.Room
 import com.example.data.datasource.LaunchLocalDataSource
 import com.example.localstorage.dao.LaunchDao
 import com.example.localstorage.datasource.LaunchLocalDataSourceImpl
-import com.example.localstorage.db.MIGRATION_1_2
 import com.example.localstorage.db.MIGRATION_2_3
 import com.example.localstorage.db.SpaceXDatabase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,26 +17,28 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object DatabaseModule {
-    @Provides
-    @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): SpaceXDatabase {
-        return Room.databaseBuilder(
-            context,
-            SpaceXDatabase::class.java,
-            "spacex_database"
-        )
-            .addMigrations(MIGRATION_2_3)
-            .build()
-    }
+abstract class DatabaseModule {
+    @Binds
+    abstract fun provideLocalDataSource(
+        launchLocalDataSourceImpl: LaunchLocalDataSourceImpl
+    ): LaunchLocalDataSource
 
-    @Provides
-    fun provideLaunchDao(database: SpaceXDatabase): LaunchDao {
-        return database.launchDao()
-    }
+    companion object {
+        @Provides
+        @Singleton
+        fun provideDatabase(@ApplicationContext context: Context): SpaceXDatabase {
+            return Room.databaseBuilder(
+                context,
+                SpaceXDatabase::class.java,
+                "spacex_database"
+            )
+                .addMigrations(MIGRATION_2_3)
+                .build()
+        }
 
-    @Provides
-    fun provideLocalDataSource(dao: LaunchDao): LaunchLocalDataSource {
-        return LaunchLocalDataSourceImpl(dao)
+        @Provides
+        fun provideLaunchDao(database: SpaceXDatabase): LaunchDao {
+            return database.launchDao()
+        }
     }
 }
