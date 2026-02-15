@@ -20,9 +20,6 @@ class SchemaTest {
     @Test
     @Throws(IOException::class)
     fun validateSchemaVersion1() {
-        // This test fails if the 'LaunchEntity' definition does not match exactly
-        // with the schema defined in 'schemas/..../1.json'.
-        // It is useful to prevent accidental changes to Entities without updating the DB version.
         val db = helper.createDatabase("test-db", 1)
         db.close()
     }
@@ -31,7 +28,6 @@ class SchemaTest {
     fun testMigration1To2() {
         val dbName = "migration-test-1-2"
 
-        // 1. CREATE DATABASE VERSION 1
         val dbV1 = helper.createDatabase(dbName, 1).apply {
             execSQL(
                 """
@@ -42,10 +38,8 @@ class SchemaTest {
             close()
         }
 
-        // 2. RUN MIGRATION TO VERSION 2 AND VALIDATE
         val dbV2 = helper.runMigrationsAndValidate(dbName, 2, true, MIGRATION_1_2)
 
-        // 3. VERIFY DATA INTEGRITY
         val cursor = dbV2.query("SELECT * FROM launches WHERE id = ?", arrayOf("id-123"))
         assertThat(cursor.moveToFirst()).isTrue()
 
@@ -63,7 +57,6 @@ class SchemaTest {
     fun testMigration2To3() {
         val dbName = "migration-test-2-3"
 
-        // 1. CREATE DATABASE VERSION 2
         val dbV2 = helper.createDatabase(dbName, 2).apply {
             execSQL(
                 """
@@ -74,18 +67,14 @@ class SchemaTest {
             close()
         }
 
-        // 2. RUN MIGRATION TO VERSION 3 AND VALIDATE
         val dbV3 = helper.runMigrationsAndValidate(dbName, 3, true, MIGRATION_2_3)
 
-        // 3. VERIFY DATA INTEGRITY
         val cursor = dbV3.query("SELECT * FROM launches WHERE id = ?", arrayOf("id-456"))
         assertThat(cursor.moveToFirst()).isTrue()
 
-        // Verify old data is preserved
         val notesIndex = cursor.getColumnIndex("userNotes")
         assertThat(cursor.getString(notesIndex)).isEqualTo("Some notes")
 
-        // Verify the new column 'isFavorite' was added with default value 0 (false)
         val favoriteIndex = cursor.getColumnIndex("isFavorite")
         assertThat(favoriteIndex != -1).isTrue()
         assertThat(cursor.getInt(favoriteIndex)).isEqualTo(0)

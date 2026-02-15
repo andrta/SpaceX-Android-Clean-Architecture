@@ -33,12 +33,10 @@ kotlin {
 dependencies {
     implementation(project(":core:domain"))
 
-    // --- Hilt ---
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
-    // --- Android X / ViewModel ---
     implementation(libs.material)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -47,9 +45,8 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.runtime.compose) // this is needed for collectAsStateWithLifecycle
+    implementation(libs.androidx.lifecycle.runtime.compose)
 
-    // --- Jetpack Compose ---
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     implementation(libs.androidx.compose.ui)
@@ -59,13 +56,10 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
 
-    // --- Coil ---
     implementation(libs.coil.compose)
     implementation(libs.coil.views)
 
-    // --- Immutable Collections ---
     implementation(libs.kotlinx.collections.immutable)
 
-    // --- Testing ---
     testImplementation(project(":core:testing"))
 }

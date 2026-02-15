@@ -68,20 +68,15 @@ class LaunchDetailsViewModelTest {
 
         // THEN
         viewModel.uiState.test {
-            // 1. Stato Iniziale
             assertThat(awaitItem()).isEqualTo(LaunchDetailsUiState.Loading)
 
-            // Lasciamo che la coroutine esegua il lavoro
             advanceUntilIdle()
 
-            // 2. Stato Success
             val successState = awaitItem()
             assertThat(successState).isInstanceOf(LaunchDetailsUiState.Success::class.java)
 
-            // *** FIX: Asserzione sui CAMPI, non sull'oggetto intero ***
             val uiLaunch = (successState as LaunchDetailsUiState.Success).launch
 
-            // Verifichiamo che i dati siano stati mappati correttamente
             assertThat(uiLaunch.id).isEqualTo(mockLaunch.id)
             assertThat(uiLaunch.missionName).isEqualTo(mockLaunch.missionName)
         }
@@ -106,7 +101,6 @@ class LaunchDetailsViewModelTest {
 
             val errorState = awaitItem()
             assertThat(errorState).isInstanceOf(LaunchDetailsUiState.Error::class.java)
-            // Nota: qui controlliamo il messaggio, assicurati che il mapping dell'errore nel VM produca questa stringa
             assertThat((errorState as LaunchDetailsUiState.Error).message).contains("DiskRead")
         }
     }
@@ -123,11 +117,9 @@ class LaunchDetailsViewModelTest {
         )
 
         viewModel = LaunchDetailsViewModel(getLaunchDetailsUseCase, createSavedStateHandle(launchId))
-        advanceUntilIdle() // Consumiamo il primo errore
+        advanceUntilIdle()
 
         viewModel.uiState.test {
-            // Poiché abbiamo fatto advanceUntilIdle() PRIMA di entrare nel blocco test{},
-            // lo StateFlow ha già l'ultimo valore emesso (Error).
             val initialState = awaitItem()
             assertThat(initialState).isInstanceOf(LaunchDetailsUiState.Error::class.java)
 
@@ -136,15 +128,11 @@ class LaunchDetailsViewModelTest {
             advanceUntilIdle()
 
             // THEN
-            // A seconda di come gestisci l'update, potresti vedere Loading o passare direttamente a Success.
-            // Se nel VM fai _uiState.update { Loading } prima della chiamata, decommenta la riga sotto:
             val loadingState = awaitItem()
             assertThat(loadingState).isEqualTo(LaunchDetailsUiState.Loading)
 
             val successState = awaitItem()
             assertThat(successState).isInstanceOf(LaunchDetailsUiState.Success::class.java)
-
-            // Anche qui, verifica per ID
             assertThat(((successState as LaunchDetailsUiState.Success).launch).id).isEqualTo(launchId)
         }
     }
@@ -159,7 +147,6 @@ class LaunchDetailsViewModelTest {
             viewModel = LaunchDetailsViewModel(getLaunchDetailsUseCase, createSavedStateHandle(launchId))
             advanceUntilIdle()
 
-            // Test
             viewModel.uiEffect.test {
                 // WHEN
                 viewModel.process(LaunchDetailsIntent.BackClicked)

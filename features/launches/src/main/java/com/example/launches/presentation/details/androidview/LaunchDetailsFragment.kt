@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class LaunchDetailsFragment : Fragment(R.layout.fragment_launch_details) {
     private val viewModel: LaunchDetailsViewModel by viewModels()
-    private var binding: FragmentLaunchDetailsBinding? = null // Assumo tu crei l'XML
+    private var binding: FragmentLaunchDetailsBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

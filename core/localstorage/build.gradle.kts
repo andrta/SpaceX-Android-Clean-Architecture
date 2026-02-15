@@ -26,7 +26,7 @@ android {
     }
 
     sourceSets {
-        getByName("androidTest").assets.srcDirs("$projectDir/schemas") // Instrumental tests JSON files schemas folder
+        getByName("androidTest").assets.srcDirs("$projectDir/schemas")
     }
 }
 
@@ -38,25 +38,18 @@ dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:data"))
 
-    // --- Dependency Injection ---
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
 
-    // --- Room ---
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    // --- Serialization ---
     implementation(libs.kotlinx.serialization.json)
-
-    // --- DataStore ---
     implementation(libs.androidx.datastore)
 
-    // --- Unit Tests ---
     testImplementation(project(":core:testing"))
 
-    // --- Instrumented Tests ---
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.truth)
     androidTestImplementation(libs.androidx.espresso.core)

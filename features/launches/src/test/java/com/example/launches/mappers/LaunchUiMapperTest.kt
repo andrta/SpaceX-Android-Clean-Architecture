@@ -6,8 +6,6 @@ import org.junit.Test
 import java.time.ZonedDateTime
 
 class LaunchUiMapperTest {
-
-    // Helper per creare un oggetto Launch con valori personalizzabili
     private fun createLaunch(
         missionName: String? = "Test Mission",
         rocketName: String? = "Falcon 9",
@@ -49,8 +47,6 @@ class LaunchUiMapperTest {
         assertThat(uiModel.isSuccess).isEqualTo(launch.isSuccess)
         assertThat(uiModel.patchImageUrl).isEqualTo(launch.patchImageUrl)
         assertThat(uiModel.details).isEqualTo(launch.details)
-
-        // Verifica contenuto lista
         assertThat(uiModel.flickrImages).containsExactly("a", "b").inOrder()
     }
 
@@ -89,7 +85,6 @@ class LaunchUiMapperTest {
         val uiModel = launch.toUiModel()
 
         // THEN
-        // Verifichiamo che il tipo sia effettivamente una collezione immutabile
         assertThat(uiModel.flickrImages).isInstanceOf(kotlinx.collections.immutable.ImmutableList::class.java)
         assertThat(uiModel.flickrImages).hasSize(1)
         assertThat(uiModel.flickrImages[0]).isEqualTo("image1")

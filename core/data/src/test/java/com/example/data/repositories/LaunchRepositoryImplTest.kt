@@ -71,10 +71,8 @@ class LaunchRepositoryImplTest {
     fun `GIVEN network error AND cached data exists WHEN getLastLaunches THEN returns Success with cached data`() = runTest {
         // GIVEN
         every { featureFlags.isGraphQlEnabled } returns true
-        // Network fails
         coEvery { graphqlSource.getLastLaunches() } throws IOException()
 
-        // Cache exists
         val cachedLaunches = listOf(mockk<Launch>())
         coEvery { localSource.getLaunches() } returns flowOf(cachedLaunches)
 
@@ -82,7 +80,6 @@ class LaunchRepositoryImplTest {
         val result = repository.getLastLaunches(false).first()
 
         // THEN
-        // Should ignore network error and return cache
         assertThat(result).isInstanceOf(DomainResult.Success::class.java)
         assertThat((result as DomainResult.Success).data).isEqualTo(cachedLaunches)
     }
@@ -91,10 +88,7 @@ class LaunchRepositoryImplTest {
     fun `GIVEN network error AND cache is empty WHEN getLastLaunches THEN returns Error`() = runTest {
         // GIVEN
         every { featureFlags.isGraphQlEnabled } returns true
-        // Network fails
         coEvery { graphqlSource.getLastLaunches() } throws IOException()
-
-        // Cache is empty
         coEvery { localSource.getLaunches() } returns flowOf(emptyList())
 
         // WHEN

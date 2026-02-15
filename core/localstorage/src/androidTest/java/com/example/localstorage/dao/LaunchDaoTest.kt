@@ -50,7 +50,7 @@ class LaunchDaoTest {
             webcastUrl = null,
             articleUrl = null,
             wikipediaUrl = null,
-            flickrImages = listOf("img1.jpg", "img2.jpg") // Testiamo anche il converter della lista
+            flickrImages = listOf("img1.jpg", "img2.jpg")
         )
 
         // WHEN

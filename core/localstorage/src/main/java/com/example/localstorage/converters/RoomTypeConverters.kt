@@ -6,7 +6,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class RoomTypeConverters {
-    // --- ZonedDateTime <-> String ---
     @TypeConverter
     fun fromTimestamp(value: String?): ZonedDateTime? {
         return value?.let { ZonedDateTime.parse(it) }
@@ -17,7 +16,6 @@ class RoomTypeConverters {
         return date?.format(DateTimeFormatter.ISO_ZONED_DATE_TIME)
     }
 
-    // --- List<String> <-> JSON String ---
     @TypeConverter
     fun fromList(value: String): List<String> {
         return try {

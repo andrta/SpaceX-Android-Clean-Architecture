@@ -32,7 +32,6 @@ class LaunchesViewModelTest {
     private val getLaunchesUseCase: GetLaunchesUseCase = mockk()
     private lateinit var viewModel: LaunchesViewModel
 
-    // HELPER: Fondamentale per far funzionare il Mapper (toUiModel) senza crashare
     private fun createDummyLaunch(id: String): Launch {
         return Launch(
             id = id,
@@ -46,7 +45,7 @@ class LaunchesViewModelTest {
             articleUrl = null,
             wikipediaUrl = null,
             details = null,
-            flickrImages = emptyList() // Importante: il mapper chiama .toImmutableList() su questo
+            flickrImages = emptyList()
         )
     }
 
@@ -72,7 +71,6 @@ class LaunchesViewModelTest {
                 val successState = awaitItem()
                 assertThat(successState).isInstanceOf(LaunchesUiState.Success::class.java)
 
-                // FIX: Verifichiamo le proprietà del UiModel, non l'oggetto Launch intero
                 val uiList = (successState as LaunchesUiState.Success).launches
                 assertThat(uiList).hasSize(1)
                 assertThat(uiList[0].id).isEqualTo(launchId)
@@ -105,7 +103,7 @@ class LaunchesViewModelTest {
     @Test
     fun `GIVEN existing data WHEN Refresh Intent succeed THEN show new data`() =
         runTest(testDispatcher) {
-            // GIVEN - Initial load
+            // GIVEN
             val oldLaunch = createDummyLaunch("old")
             coEvery { getLaunchesUseCase(forceRefresh = false) } returns flowOf(
                 DomainResult.Success(listOf(oldLaunch))
@@ -114,17 +112,16 @@ class LaunchesViewModelTest {
             viewModel = LaunchesViewModel(getLaunchesUseCase)
             advanceUntilIdle()
 
-            // PREPARE REFRESH
             val newLaunch = createDummyLaunch("new")
             coEvery { getLaunchesUseCase(forceRefresh = true) } returns flowOf(
                 DomainResult.Success(listOf(newLaunch))
             )
 
             viewModel.uiState.test {
-                val initialState = awaitItem() // Consume initial state
+                val initialState = awaitItem()
                 assertThat(initialState).isInstanceOf(LaunchesUiState.Success::class.java)
 
-                // WHEN - MVI Style
+                // WHEN
                 viewModel.process(LaunchesIntent.Refresh)
                 advanceUntilIdle()
 
@@ -132,7 +129,6 @@ class LaunchesViewModelTest {
                 val result = awaitItem()
                 assertThat(result).isInstanceOf(LaunchesUiState.Success::class.java)
 
-                // FIX: Verifichiamo che l'ID sia cambiato nel UiModel
                 val uiList = (result as LaunchesUiState.Success).launches
                 assertThat(uiList).hasSize(1)
                 assertThat(uiList[0].id).isEqualTo("new")
@@ -142,7 +138,7 @@ class LaunchesViewModelTest {
     @Test
     fun `GIVEN existing data WHEN Refresh Intent fails THEN preserves old data`() =
         runTest(testDispatcher) {
-            // GIVEN - Initial load
+            // GIVEN
             val oldLaunch = createDummyLaunch("old")
             coEvery { getLaunchesUseCase(forceRefresh = false) } returns flowOf(
                 DomainResult.Success(listOf(oldLaunch))
@@ -151,13 +147,12 @@ class LaunchesViewModelTest {
             viewModel = LaunchesViewModel(getLaunchesUseCase)
             advanceUntilIdle()
 
-            // PREPARE REFRESH FAIL
             coEvery { getLaunchesUseCase(forceRefresh = true) } returns flowOf(
                 DomainResult.Failure(DataError.Network.Server)
             )
 
             viewModel.uiState.test {
-                awaitItem() // Consume initial state
+                awaitItem()
 
                 // WHEN
                 viewModel.process(LaunchesIntent.Refresh)
@@ -169,8 +164,6 @@ class LaunchesViewModelTest {
                 val state = errorState as LaunchesUiState.Error
 
                 assertThat(state.error).isEqualTo(DataError.Network.Server)
-
-                // FIX: Verifichiamo che i dati vecchi siano preservati (e mappati)
                 assertThat(state.launches).hasSize(1)
                 assertThat(state.launches[0].id).isEqualTo("old")
             }
@@ -188,7 +181,6 @@ class LaunchesViewModelTest {
             viewModel = LaunchesViewModel(getLaunchesUseCase)
             advanceUntilIdle()
 
-            // Test the Side Effect Channel
             viewModel.uiEffect.test {
                 // WHEN
                 viewModel.process(LaunchesIntent.LaunchClicked(launchId))
