@@ -24,5 +24,5 @@ data class LaunchEntity(
     val flickrImages: List<String>,
 
     val userNotes: String? = null,
-    val isFavorite: Boolean = false, // New field for version 3
+    val isFavorite: Boolean = false,
 )

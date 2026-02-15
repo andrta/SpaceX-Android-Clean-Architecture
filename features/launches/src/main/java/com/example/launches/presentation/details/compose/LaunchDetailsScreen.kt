@@ -178,7 +178,7 @@ private fun LabeledInfo(label: String, value: String, isTitle: Boolean = false) 
 @Composable
 private fun LaunchStatus(isSuccess: Boolean) {
     val iconRes = if (isSuccess) R.drawable.ic_check_circle_24 else R.drawable.ic_warning_24
-    val color = if (isSuccess) Color(0xFF4CAF50) else Color(0xFFF44336) // Green or Red
+    val color = if (isSuccess) Color(0xFF4CAF50) else Color(0xFFF44336)
     val text = if (isSuccess) "Successful Launch" else "Launch Failed"
 
     Row(verticalAlignment = Alignment.CenterVertically) {

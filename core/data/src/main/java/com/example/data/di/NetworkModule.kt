@@ -45,8 +45,8 @@ object NetworkModule {
     @Singleton
     fun provideJson(): Json {
         return Json {
-            ignoreUnknownKeys = true // Ignores JSON extra fields to avoid crash
-            coerceInputValues = true // Better null/default management
+            ignoreUnknownKeys = true
+            coerceInputValues = true
             encodeDefaults = true
         }
     }

@@ -94,7 +94,7 @@ class LaunchesFragment : Fragment(R.layout.fragment_launches) {
             }
 
             is LaunchesUiState.Error -> {
-                adapter.submitList(state.launches) // Preserviamo i dati vecchi
+                adapter.submitList(state.launches)
 
                 if (isListEmpty) {
                     binding?.errorText?.text = state.error.toString()

@@ -61,7 +61,7 @@ class LaunchEntityMapperTest {
         // THEN
         assertThat(entity.id).isEqualTo("123")
         assertThat(entity.missionName).isEqualTo("Mission X")
-        assertThat(entity.userNotes).isNull() // Default value check
+        assertThat(entity.userNotes).isNull()
     }
 
     @Test(expected = DataException.NullValueException::class)
@@ -69,7 +69,7 @@ class LaunchEntityMapperTest {
         // GIVEN
         val launch = Launch(
             id = "1",
-            missionName = null, // Invalid
+            missionName = null,
             launchDate = ZonedDateTime.now(),
             isSuccess = true,
             rocketId = "r1",

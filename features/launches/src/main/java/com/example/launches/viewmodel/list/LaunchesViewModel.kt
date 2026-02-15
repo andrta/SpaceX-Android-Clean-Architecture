@@ -45,8 +45,6 @@ class LaunchesViewModel @Inject constructor(
             is LaunchesIntent.LaunchClicked -> {
                 sendEffect(LaunchesUiEffect.NavigateToDetail(intent.id))
             }
-            // Gestione opzionale se aggiungerai ErrorDismissed in futuro
-            // is LaunchesIntent.ErrorDismissed -> { ... }
         }
     }
 

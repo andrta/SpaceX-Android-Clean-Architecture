@@ -13,10 +13,7 @@ kotlin {
 }
 
 dependencies {
-    // --- Coroutines ---
     implementation(libs.kotlinx.coroutines.core)
-
-    // --- Hilt ---
     implementation(libs.hilt.core)
     ksp(libs.hilt.compiler)
 }

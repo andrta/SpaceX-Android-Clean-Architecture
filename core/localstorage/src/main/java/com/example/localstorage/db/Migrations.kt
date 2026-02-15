@@ -11,7 +11,6 @@ val MIGRATION_1_2 = object : Migration(1, 2) {
 
 val MIGRATION_2_3 = object : Migration(2, 3) {
     override fun migrate(db: SupportSQLiteDatabase) {
-        // 1. Create a new table with the desired schema (isSuccess is nullable, and isFavorite is added)
         db.execSQL(
             """
             CREATE TABLE IF NOT EXISTS `launches_new` (
@@ -34,7 +33,6 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
             """.trimIndent()
         )
 
-        // 2. Copy the data from the old table to the new table
         db.execSQL(
             """
             INSERT INTO launches_new (id, missionName, launchDate, isSuccess, rocketId, rocketName, patchImageUrl, webcastUrl, articleUrl, wikipediaUrl, details, flickrImages, userNotes)
@@ -43,10 +41,8 @@ val MIGRATION_2_3 = object : Migration(2, 3) {
             """.trimIndent()
         )
 
-        // 3. Remove the old table
         db.execSQL("DROP TABLE launches")
 
-        // 4. Rename the new table to the original name
         db.execSQL("ALTER TABLE launches_new RENAME TO launches")
     }
 }
